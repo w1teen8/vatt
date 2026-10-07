@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vatt — моніторинг енергоспоживання для малого бізнесу</title>
+<meta name="description" content="Концепт-проєкт. Датчики на ввідні лінії показують розхід по обладнанню погодинно й рахують економію від перенесення навантаження в нічну тарифну зону.">
+<meta name="theme-color" content="#f0f1f2">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2314171a'/%3E%3Cpath d='M3 4h2.2L8 10.6 10.8 4H13L9 12.5H7z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/ibm-plex-sans-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* IBM Plex Sans / Mono — локальні копії, SIL OFL 1.1 (fonts/OFL-*.txt); лише cyrillic + latin */
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-400-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-400-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-500-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-500-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-600-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(fonts/ibm-plex-mono-600-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/ibm-plex-sans-var-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/ibm-plex-sans-var-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/ibm-plex-sans-var-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/ibm-plex-sans-var-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* ---------------------------------------------------------------
+   Палітра — 5 значень + білий для площин даних
+   paper #f0f1f2 · ink #14171a · muted #5b646c · line #cdd1d5
+   signal #0a2fd4 (тільки графіки + головна кнопка)
+   --------------------------------------------------------------- */
+:root{
+  --paper:#f0f1f2;
+  --white:#fff;
+  --ink:#14171a;
+  --muted:#5b646c;
+  --line:#cdd1d5;
+  --signal:#0a2fd4;
+
+  --sans:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+
+  --pad:20px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:400 16px/1.55 var(--sans);
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,p,ul,ol,figure,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+img,svg{display:block;max-width:100%}
+a{color:var(--signal);text-decoration:underline;text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+
+/* фокус */
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.skip{position:absolute;left:-9999px;top:0;z-index:50;background:var(--ink);color:var(--white);
+  padding:var(--s3) var(--s4);font:500 14px var(--mono);text-decoration:none}
+.skip:focus{left:0}
+
+/* ---------- каркас: щільна сітка з волосяними лініями ---------- */
+.wrap{max-width:1320px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line);background:var(--paper)}
+@media (max-width:1320px){.wrap{border-left:0;border-right:0}}
+.band{border-top:1px solid var(--line)}
+.inner{padding:var(--s6) var(--pad)}
+@media (min-width:768px){:root{--pad:32px}.inner{padding:var(--s7) var(--pad)}}
+@media (min-width:1024px){:root{--pad:40px}}
+@media (min-width:1440px){:root{--pad:56px}}
+
+.mark{font:500 12px/1 var(--mono);color:var(--muted);letter-spacing:.04em}
+.hdg{font-weight:600;letter-spacing:-.015em;line-height:1.12;margin-bottom:var(--s4)}
+h2.hdg{font-size:clamp(25px,4.6vw,38px)}
+h3.hdg{font-size:clamp(18px,2.4vw,22px);margin-bottom:var(--s3)}
+.lede{color:var(--muted);max-width:62ch}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"zero" 1}
+
+/* заголовок секції з номером у полі */
+.shead{display:grid;grid-template-columns:1fr;gap:var(--s2);margin-bottom:var(--s6)}
+@media (min-width:1024px){
+  .shead{grid-template-columns:56px minmax(0,1fr);gap:var(--s5);align-items:start}
+}
+
+/* ---------- службова смуга концепту ---------- */
+.notice{background:var(--ink);color:var(--white);font:400 13px/1.4 var(--mono)}
+.notice .inner{padding:10px var(--pad)}
+.notice b{font-weight:600}
+
+/* ---------- шапка ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
+  padding:var(--s3) var(--pad);border-top:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:var(--s2);font:600 19px/1 var(--sans);letter-spacing:.02em;
+  color:var(--ink);text-decoration:none}
+.brand span{font:500 11px/1 var(--mono);color:var(--muted);letter-spacing:.08em}
+.nav{display:none;gap:var(--s5);font:400 14px var(--mono)}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+@media (min-width:1024px){.nav{display:flex}}
+
+/* ---------- кнопки ---------- */
+.btn{display:inline-block;font:600 15px/1 var(--sans);padding:15px 22px;border:1px solid var(--signal);
+  background:var(--signal);color:var(--white);text-decoration:none;cursor:pointer;border-radius:0}
+.btn:hover{background:#0827a9;border-color:#0827a9}
+.btn-2{display:inline-block;font:500 14px/1 var(--mono);padding:13px 18px;border:1px solid var(--ink);
+  background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;border-radius:0}
+.btn-2:hover{background:var(--ink);color:var(--white)}
+
+/* ---------- 01 герой ---------- */
+.hero .inner{padding-top:var(--s7);padding-bottom:var(--s7)}
+.hero h1{font-size:clamp(31px,6.6vw,62px);font-weight:600;line-height:1.05;letter-spacing:-.025em;
+  max-width:22ch;margin-bottom:var(--s5)}
+.hero h1 .amount{color:var(--signal);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hero .lede{font-size:clamp(16px,1.9vw,19px);margin-bottom:var(--s6)}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s4)}
+.spec{display:grid;gap:0;margin-top:var(--s7);border-top:1px solid var(--line)}
+@media (min-width:768px){.spec{grid-template-columns:repeat(3,1fr)}}
+.spec div{padding:var(--s4) 0;border-bottom:1px solid var(--line);font:400 14px var(--mono);color:var(--muted)}
+@media (min-width:768px){
+  .spec div{border-bottom:0;padding:var(--s4) var(--s5) var(--s4) 0}
+  .spec div+div{border-left:1px solid var(--line);padding-left:var(--s5)}
+}
+.spec b{display:block;font:600 15px var(--mono);color:var(--ink)}
+
+/* ---------- 02 демо ---------- */
+.panel{background:var(--white);border:1px solid var(--line)}
+.panel-hd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s3);
+  padding:var(--s3) var(--s4);border-bottom:1px solid var(--line)}
+.panel-hd .mark{color:var(--ink)}
+
+.ctrl{display:grid;gap:var(--s5);padding:var(--s4);border-bottom:1px solid var(--line)}
+@media (min-width:900px){.ctrl{grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:var(--s7);align-items:start}}
+fieldset{margin:0;padding:0;border:0;min-width:0}
+legend{font:500 12px var(--mono);color:var(--muted);padding:0;margin-bottom:var(--s3);letter-spacing:.04em}
+.seg{display:flex;flex-wrap:wrap;border:1px solid var(--ink)}
+.seg label{position:relative;flex:1 1 auto}
+.seg input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;margin:0;cursor:pointer}
+.seg span{display:block;padding:12px 16px;font:500 14px/1 var(--mono);white-space:nowrap;text-align:center;cursor:pointer}
+.seg label+label span{border-left:1px solid var(--ink)}
+.seg input:checked+span{background:var(--ink);color:var(--white)}
+.seg input:focus-visible+span{outline:2px solid var(--signal);outline-offset:-4px}
+.seg input:not(:checked):hover+span{background:var(--paper)}
+@media (max-width:559px){
+  .seg{flex-direction:column}
+  .seg label+label span{border-left:0;border-top:1px solid var(--ink)}
+  .seg span{text-align:left}
+}
+
+.slider-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);margin-bottom:var(--s2)}
+.slider-row output{font:600 17px var(--mono);color:var(--signal);white-space:nowrap}
+input[type=range]{width:100%;margin:0;height:28px;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line)}
+input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:22px;background:var(--signal);
+  border:0;border-radius:0;margin-top:-10px}
+input[type=range]::-moz-range-thumb{width:14px;height:22px;background:var(--signal);border:0;border-radius:0}
+.scale{display:flex;justify-content:space-between;font:400 11px var(--mono);color:var(--muted);margin-top:2px}
+.hint{font:400 13px/1.45 var(--sans);color:var(--muted);margin-top:var(--s3);max-width:52ch}
+
+/* показники */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--line)}
+@media (min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{padding:var(--s4);border-top:1px solid var(--line);margin-top:-1px}
+.kpi+.kpi{border-left:1px solid var(--line)}
+@media (max-width:899px){.kpi:nth-child(odd){border-left:0}}
+.kpi dt{font:500 12px/1.3 var(--mono);color:var(--muted);margin-bottom:var(--s2);letter-spacing:.03em}
+.kpi dd{font:600 clamp(23px,3.4vw,31px)/1 var(--mono);letter-spacing:-.02em}
+.kpi dd small{font:500 12px var(--mono);color:var(--muted);letter-spacing:0;white-space:nowrap}
+@media (max-width:899px){.kpi dd small{display:block;margin-top:6px}}
+.kpi.accent dd{color:var(--signal)}
+
+/* графік */
+.chart-wrap{padding:var(--s4)}
+.readout{min-height:38px;display:flex;align-items:center;flex-wrap:wrap;gap:var(--s3);
+  font:500 13px var(--mono);color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:var(--s3);margin-bottom:var(--s3)}
+.readout .dim{color:var(--muted);font-weight:400}
+.chart-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.chart-scroll:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.chart-scroll svg{max-width:none}
+#chartScroll{min-height:270px}
+.case .chart-scroll{min-height:240px}
+.scroll-hint{display:none;font:400 12px var(--mono);color:var(--muted);margin-bottom:var(--s2)}
+@media (max-width:719px){.scroll-hint{display:block}}
+.keys{display:flex;flex-wrap:wrap;gap:var(--s4);margin-top:var(--s3);font:400 12px var(--mono);color:var(--muted)}
+.keys i{display:inline-block;width:18px;height:0;border-top-width:2px;border-top-style:solid;vertical-align:3px;margin-right:6px}
+.keys .k1 i{border-color:var(--signal)}
+.keys .k2 i{border-color:var(--ink);border-top-style:dashed}
+.keys .k3 i{border-top:0;height:10px;width:14px;background:var(--paper);border:1px solid var(--line);vertical-align:-1px}
+
+/* розбивка по обладнанню */
+.eq{padding:var(--s4);border-top:1px solid var(--line)}
+.eq-list{margin-top:var(--s4)}
+.eq-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s2) var(--s4);
+  padding:var(--s3) 0;border-top:1px solid var(--line);align-items:baseline}
+.eq-row:last-child{border-bottom:1px solid var(--line)}
+.eq-name{font:400 14px/1.3 var(--sans)}
+.eq-val{font:500 14px var(--mono);white-space:nowrap}
+.eq-val .sep{color:var(--line);margin:0 6px}
+.eq-val .mo{color:var(--muted)}
+.eq-bar{grid-column:1/-1;height:10px;background:var(--paper);position:relative;border:1px solid var(--line)}
+.eq-fill{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
+.eq-shift{position:absolute;left:0;top:0;bottom:0;background:var(--signal)}
+@media (max-width:639px){
+  .eq-row{grid-template-columns:minmax(0,1fr)}
+  .eq-val{white-space:normal}
+}
+.eq-row[data-shiftable="0"] .eq-tag{display:none}
+.eq-tag{font:400 11px var(--mono);color:var(--signal)}
+
+details.table{margin-top:var(--s4);border-top:1px solid var(--line)}
+details.table>summary{font:500 13px var(--mono);color:var(--muted);padding:var(--s3) 0;cursor:pointer;list-style:none}
+details.table>summary::-webkit-details-marker{display:none}
+details.table>summary::before{content:"+ ";color:var(--signal)}
+details.table[open]>summary::before{content:"− "}
+details.table>summary:hover{color:var(--ink)}
+table{border-collapse:collapse;width:100%;font:400 13px var(--mono);margin-bottom:var(--s4)}
+caption{text-align:left;font:400 12px var(--sans);color:var(--muted);padding-bottom:var(--s2)}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:right;white-space:nowrap}
+th{font-weight:600;background:var(--paper)}
+th:first-child,td:first-child{text-align:left}
+.tscroll{overflow-x:auto}
+
+/* ---------- 03 проблема ---------- */
+.leaks{display:grid;gap:0;border-top:1px solid var(--line)}
+@media (min-width:860px){.leaks{grid-template-columns:repeat(3,1fr)}}
+.leak{padding:var(--s5) 0;border-bottom:1px solid var(--line)}
+@media (min-width:860px){
+  .leak{padding:var(--s5) var(--s5) var(--s5) 0;border-bottom:0}
+  .leak+.leak{border-left:1px solid var(--line);padding-left:var(--s5)}
+}
+.leak .mark{display:block;margin-bottom:var(--s3)}
+.leak .leak-sum{font:600 clamp(26px,3.6vw,34px)/1 var(--mono);color:var(--signal);letter-spacing:-.02em;margin:var(--s4) 0 var(--s1)}
+.leak .leak-sub{font:400 12px var(--mono);color:var(--muted);margin-bottom:var(--s4)}
+.leak p{font-size:15px;color:var(--muted)}
+.leak dl{display:grid;grid-template-columns:auto 1fr;gap:var(--s1) var(--s3);margin-top:var(--s4);
+  font:400 13px var(--mono);border-top:1px solid var(--line);padding-top:var(--s3)}
+.leak dt{color:var(--muted)}
+.leak dd{font-weight:500;text-align:right}
+
+/* ---------- 04 як працює ---------- */
+.steps{border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s4);
+  padding:var(--s5) 0;border-bottom:1px solid var(--line)}
+@media (min-width:860px){
+  .step{grid-template-columns:72px minmax(0,26ch) minmax(0,1fr) auto;gap:var(--s6);align-items:baseline}
+}
+.step>p,.step>.when{grid-column:2}
+@media (min-width:860px){.step>p,.step>.when{grid-column:auto}}
+.step-n{font:600 15px var(--mono);color:var(--signal)}
+.step h3{font:600 18px/1.25 var(--sans)}
+.step p{color:var(--muted);font-size:15px}
+.step .when{font:500 13px var(--mono);color:var(--ink);white-space:nowrap}
+
+/* ---------- 05 кейс ---------- */
+.case{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+.case>*{min-width:0}
+@media (min-width:1000px){.case{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:var(--s7)}}
+.ba{border-top:1px solid var(--line)}
+.ba-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:var(--s3) var(--s4);
+  padding:var(--s3) 0;border-bottom:1px solid var(--line);align-items:baseline}
+.ba-row .lbl{font:400 14px/1.3 var(--sans);color:var(--muted)}
+.ba-row .was{font:400 15px var(--mono);color:var(--muted);text-align:right}
+.ba-row .now{font:600 15px var(--mono);text-align:right;min-width:9ch}
+.ba-head .lbl,.ba-head .was,.ba-head .now{font:500 11px var(--mono);color:var(--muted);letter-spacing:.05em}
+.case-total{margin-top:var(--s5);border:1px solid var(--ink);padding:var(--s4)}
+.case-total dt{font:500 12px var(--mono);color:var(--muted);margin-bottom:var(--s2)}
+.case-total dd{font:600 clamp(28px,4vw,38px)/1 var(--mono);color:var(--signal);letter-spacing:-.02em}
+.quote{margin:var(--s5) 0 0;padding-left:var(--s4);border-left:2px solid var(--line);font-size:15px;color:var(--muted)}
+.quote cite{display:block;margin-top:var(--s2);font:400 13px var(--mono);font-style:normal;color:var(--ink)}
+
+/* ---------- 06 тарифи ---------- */
+.plans{display:grid;gap:0;border-top:1px solid var(--line)}
+@media (min-width:860px){.plans{grid-template-columns:repeat(2,1fr)}}
+.plan{padding:var(--s5) 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column}
+@media (min-width:860px){
+  .plan{padding:var(--s5) var(--s6) var(--s5) 0;border-bottom:0}
+  .plan+.plan{border-left:1px solid var(--line);padding-left:var(--s6)}
+}
+.plan-price{font:600 clamp(30px,4.4vw,42px)/1 var(--mono);letter-spacing:-.025em;margin:var(--s4) 0 var(--s1)}
+.plan-unit{font:400 13px var(--mono);color:var(--muted);margin-bottom:var(--s5)}
+.plan ul{border-top:1px solid var(--line);margin-bottom:var(--s5)}
+.plan li{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;
+  display:grid;grid-template-columns:14px 1fr;gap:var(--s3)}
+.plan li::before{content:"·";font:600 14px var(--mono);color:var(--signal)}
+.plan .btn,.plan .btn-2{align-self:flex-start;margin-top:auto}
+.plan-extra{font:400 13px/1.5 var(--mono);color:var(--muted);padding-top:var(--s5);border-top:1px solid var(--line);margin-top:var(--s2)}
+
+/* ---------- 07 заперечення ---------- */
+.faq{border-top:1px solid var(--line);padding-top:var(--s2)}
+.faq details:first-child summary{padding-top:var(--s4)} /* 8 + 16 = ті самі 24px від лінії */
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:baseline;
+  padding:var(--s5) 0;cursor:pointer;font:600 clamp(16px,2vw,19px)/1.3 var(--sans);list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 20px/1 var(--mono);color:var(--signal)}
+.faq details[open] summary::after{content:"−"}
+.faq summary:hover{color:var(--signal)}
+.faq .ans{padding:0 0 var(--s5);max-width:72ch;color:var(--muted);font-size:15px}
+.faq details[open] .ans{animation:reveal .16s ease-out}
+.faq .ans p+p{margin-top:var(--s3)}
+.faq .ans b{color:var(--ink);font-weight:600}
+@keyframes reveal{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+
+/* ---------- 08 форма ---------- */
+.form-grid{display:grid;gap:var(--s7)}
+@media (min-width:1000px){.form-grid{grid-template-columns:minmax(0,1fr) minmax(0,420px)}}
+form{border-top:1px solid var(--line)}
+.field{padding:var(--s4) 0;border-bottom:1px solid var(--line)}
+.field label{display:block;font:500 12px var(--mono);color:var(--muted);margin-bottom:var(--s2);letter-spacing:.04em}
+.field input,.field select{width:100%;font:400 16px var(--sans);color:var(--ink);background:var(--white);
+  border:1px solid var(--line);border-radius:0;padding:12px 14px}
+.field input:focus,.field select:focus{border-color:var(--signal);outline:2px solid var(--signal);outline-offset:-2px}
+.field .note{font:400 12px var(--mono);color:var(--muted);margin-top:6px}
+.form-foot{padding-top:var(--s5);display:flex;flex-wrap:wrap;gap:var(--s4);align-items:center}
+.status{font:500 14px/1.45 var(--mono);padding:var(--s4);border:1px solid var(--ink);margin-top:var(--s5)}
+.status[hidden]{display:none}
+.aside-list{border-top:1px solid var(--line)}
+.aside-list li{padding:var(--s4) 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted)}
+.aside-list b{display:block;color:var(--ink);font:600 15px var(--sans);margin-bottom:2px}
+
+/* ---------- підвал ---------- */
+footer{border-top:1px solid var(--line);background:var(--ink);color:var(--paper)}
+footer .inner{padding-top:var(--s6);padding-bottom:var(--s6)}
+footer .fgrid{display:grid;gap:var(--s5)}
+@media (min-width:860px){footer .fgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+footer .brand{color:var(--paper)}
+footer .brand span{color:#8d959c}
+footer p{font:400 13px/1.6 var(--mono);color:#aab1b7;max-width:62ch;margin-top:var(--s3)}
+footer b{color:var(--white);font-weight:600}
+
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#demo">Перейти до демо-дашборда</a>
+
+<div class="wrap">
+
+  <div class="notice">
+    <div class="inner">
+      <b>Концепт-проєкт.</b> Компанія «Vatt», кейс пекарні, ціни та всі показники — вигадані.
+      Форма заявки працює в демонстраційному режимі й нікуди не надсилає дані.
+    </div>
+  </div>
+
+  <header class="top">
+    <a class="brand" href="#top">Vatt <span>облік · 2026</span></a>
+    <nav class="nav" aria-label="Розділи сторінки">
+      <a href="#demo">Демо</a>
+      <a href="#problem">Де втрати</a>
+      <a href="#how">Як працює</a>
+      <a href="#case">Кейс</a>
+      <a href="#plans">Тарифи</a>
+      <a href="#audit">Аудит</a>
+    </nav>
+  </header>
+
+  <!-- ===================== 01 ГЕРОЙ ===================== -->
+  <section class="band hero" id="top">
+    <div class="inner">
+      <p class="mark">01</p>
+      <h1>За світло у трьох точках&nbsp;— <span class="amount" id="heroSum">64 638</span> грн на місяць. Покажемо, з чого саме.</h1>
+      <p class="lede">Vatt ставить датчики на ввідні лінії й розкладає рахунок по обладнанню — година за годиною.
+        Видно, що працює вночі даремно, який апарат з’їдає найбільше в пікову зону і скільки реально дає
+        перенесення частини навантаження на дешевий нічний тариф.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#audit">Безкоштовний аудит однієї точки</a>
+      </div>
+      <div class="spec">
+        <div><b>20 хвилин</b> монтаж на щиток, без вимкнення живлення</div>
+        <div><b>24 години</b> до першого погодинного звіту</div>
+        <div><b>0 грн</b> за аудит першої точки</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 02 ДЕМО ===================== -->
+  <section class="band" id="demo">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">02</p>
+        <div>
+          <h2 class="hdg">Подивіться на своєму типі закладу</h2>
+          <p class="lede">Дані синтетичні, але пропорції взяті з типових об’єктів: двозонний тариф,
+            базове навантаження вночі, два піки вдень. Виберіть тип закладу й посуньте повзунок —
+            усі цифри нижче перераховуються.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-hd">
+          <p class="mark">Дашборд · синтетичні дані</p>
+          <p class="mark" id="tariffLine">тариф: день — · ніч —</p>
+        </div>
+
+        <div class="ctrl">
+          <fieldset>
+            <legend>Тип закладу</legend>
+            <div class="seg" id="venueSeg"></div>
+          </fieldset>
+
+          <div>
+            <div class="slider-row">
+              <label for="shift" style="font:500 12px var(--mono);color:var(--muted);letter-spacing:.04em">
+                Перенести навантаження в нічну зону
+              </label>
+              <output for="shift" id="shiftOut">0 %</output>
+            </div>
+            <input type="range" id="shift" min="0" max="100" step="5" value="30"
+                   aria-describedby="shiftHint">
+            <div class="scale" aria-hidden="true"><span>0 %</span><span>50 %</span><span>100 %</span></div>
+            <p class="hint" id="shiftHint">Переноситься лише те, що фізично можна зсунути в часі.
+              Решта навантаження лишається на місці.</p>
+          </div>
+        </div>
+
+        <dl class="kpis">
+          <div class="kpi">
+            <dt>Рахунок зараз</dt>
+            <dd><span id="kpiBill">—</span> <small>грн/міс</small></dd>
+          </div>
+          <div class="kpi">
+            <dt>Частка в нічній зоні</dt>
+            <dd><span id="kpiNight">—</span> <small>%</small></dd>
+          </div>
+          <div class="kpi accent">
+            <dt>Економія на місяць</dt>
+            <dd><span id="kpiMonth">—</span> <small>грн</small></dd>
+          </div>
+          <div class="kpi accent">
+            <dt>Економія на рік</dt>
+            <dd><span id="kpiYear">—</span> <small>грн</small></dd>
+          </div>
+        </dl>
+
+        <figure class="chart-wrap">
+          <figcaption class="mark" style="margin-bottom:var(--s3)">Графік 01 · розхід за добу, кВт по годинах</figcaption>
+          <p class="readout" id="readout" aria-live="polite"></p>
+          <p class="scroll-hint" aria-hidden="true">Графік ширший за екран — гортайте його вбік.</p>
+          <div class="chart-scroll" id="chartScroll" tabindex="0" role="application"
+               aria-label="Графік розходу за добу. Стрілками вліво та вправо — перехід по годинах.">
+            <svg id="dayChart" aria-hidden="true"></svg>
+          </div>
+          <p class="keys">
+            <span class="k1"><i></i>зараз</span>
+            <span class="k2"><i></i>після перенесення</span>
+            <span class="k3"><i></i>нічна зона, <span id="nightWindow">23:00–07:00</span></span>
+          </p>
+          <details class="table">
+            <summary>Таблиця значень графіка 01</summary>
+            <div class="tscroll" id="dayTable"></div>
+          </details>
+        </figure>
+
+        <div class="eq">
+          <h3 class="hdg" style="font-size:17px">Розбивка по обладнанню</h3>
+          <p class="hint" style="margin-top:0">Частка кожної групи в рахунку за місяць.
+            Синім позначено ту частину, яка переїде в ніч за поточного положення повзунка.</p>
+          <div class="eq-list" id="eqList"></div>
+          <details class="table">
+            <summary>Таблиця значень по обладнанню</summary>
+            <div class="tscroll" id="eqTable"></div>
+          </details>
+        </div>
+      </div>
+
+      <div class="hero-cta" style="margin-top:var(--s5)">
+        <button class="btn-2" type="button" id="pdfBtn" aria-describedby="pdfNote">Приклад звіту у PDF</button>
+        <span class="mark" id="pdfNote">формат звіту, який приходить щотижня</span>
+      </div>
+      <p class="status" id="pdfStatus" hidden role="status"></p>
+    </div>
+  </section>
+
+  <!-- ===================== 03 ПРОБЛЕМА ===================== -->
+  <section class="band" id="problem">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">03</p>
+        <div>
+          <h2 class="hdg">Три місця, де гроші йдуть щодня</h2>
+          <p class="lede">Це не екзотика — так виглядає більшість об’єктів, які ми міряли вперше.
+            Суми нижче розраховані за тим самим тарифом, що й у демо.</p>
+        </div>
+      </div>
+      <div class="leaks" id="leaks"></div>
+    </div>
+  </section>
+
+  <!-- ===================== 04 ЯК ПРАЦЮЄ ===================== -->
+  <section class="band" id="how">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">04</p>
+        <div><h2 class="hdg">Як це відбувається</h2></div>
+      </div>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-n num">01</span>
+          <h3>Датчик на щиток</h3>
+          <p>Струмові кліщі застібаються на ввідні автомати й на лінії, які вас цікавлять, — холодильна група,
+            печі, вентиляція. Автомати не знімаються, проводка не розрізається, живлення не вимикається.</p>
+          <span class="when">день звернення</span>
+        </li>
+        <li class="step">
+          <span class="step-n num">02</span>
+          <h3>20 хвилин монтажу</h3>
+          <p>Один електрик, одна поїздка. Шлюз живиться від DIN-рейки й віддає дані через мобільну мережу,
+            до вашого Wi-Fi і до вашої локальної мережі ми не підключаємося.</p>
+          <span class="when">20 хв на точку</span>
+        </li>
+        <li class="step">
+          <span class="step-n num">03</span>
+          <h3>Дані через добу</h3>
+          <p>Перша повна доба — це вже профіль: видно базове навантаження, піки й те, що лишається
+            працювати після закриття. Рекомендації з перенесення приходять після тижня вимірювань.</p>
+          <span class="when">+24 години</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== 05 КЕЙС ===================== -->
+  <section class="band" id="case">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">05</p>
+        <div>
+          <h2 class="hdg">Пекарня, дві точки, шість місяців</h2>
+          <p class="lede" id="caseLede"></p>
+        </div>
+      </div>
+
+      <div class="case">
+        <div>
+          <div class="ba">
+            <div class="ba-row ba-head">
+              <span class="lbl">Що змінили</span><span class="was">було</span><span class="now">стало</span>
+            </div>
+            <div id="caseRows"></div>
+          </div>
+          <dl class="case-total">
+            <dt>Сумарна економія за шість місяців</dt>
+            <dd><span id="caseTotal">—</span> грн</dd>
+          </dl>
+          <blockquote class="quote">
+            «Найбільше дала не нова техніка, а графік. Першу піч ми просто стали виводити на температуру
+            о 04:40, а не о 06:10 — і це вже був інший рахунок.»
+            <cite>власник, пекарня «Хлібна №3» — персонаж вигаданий</cite>
+          </blockquote>
+        </div>
+
+        <figure>
+          <figcaption class="mark" style="margin-bottom:var(--s3)">Графік 02 · рахунок за місяць, грн</figcaption>
+          <div class="chart-scroll">
+            <svg id="caseChart" aria-hidden="true"></svg>
+          </div>
+          <p class="keys">
+            <span class="k1"><i style="height:10px;border-top:0;background:var(--signal);width:14px;vertical-align:-1px"></i>факт за місяць</span>
+            <span class="k2"><i></i>базова лінія до змін</span>
+          </p>
+          <details class="table">
+            <summary>Таблиця значень графіка 02</summary>
+            <div class="tscroll" id="caseTable"></div>
+          </details>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 06 ТАРИФИ ===================== -->
+  <section class="band" id="plans">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">06</p>
+        <div>
+          <h2 class="hdg">Скільки це коштує</h2>
+          <p class="lede">Ціна за одну точку на місяць. Обладнання лишається нашим і входить у платіж —
+            купувати датчики не потрібно.</p>
+        </div>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <p class="mark">Моніторинг</p>
+          <p class="plan-price">890 грн</p>
+          <p class="plan-unit">за точку / місяць · без строку</p>
+          <ul>
+            <li>Один датчик на ввід, споживання по годинах</li>
+            <li>Розподіл день / ніч і перевірка тарифу в рахунку</li>
+            <li>Звіт раз на місяць, вивантаження CSV</li>
+            <li>Сповіщення про аварійне зростання базового навантаження</li>
+          </ul>
+          <a class="btn-2" href="#audit">Почати з аудиту</a>
+        </div>
+        <div class="plan">
+          <p class="mark">Моніторинг і оптимізація</p>
+          <p class="plan-price">1 640 грн</p>
+          <p class="plan-unit">за точку / місяць · перший місяць без оплати</p>
+          <ul>
+            <li>До восьми каналів: окремо печі, холод, вентиляція, світло</li>
+            <li>Персональний графік перенесення навантаження в ніч</li>
+            <li>Щотижневий звіт і розбір відхилень від графіка</li>
+            <li>Розрахунок окупності заміни конкретної одиниці обладнання</li>
+            <li>Вікно зв’язку з інженером, не тільки тікети</li>
+          </ul>
+          <a class="btn" href="#audit">Замовити аудит</a>
+        </div>
+      </div>
+      <p class="plan-extra">Монтаж — 2 400 грн одноразово за точку, і він не оплачується, якщо ви відмовляєтеся
+        від сервісу в перші 30 днів. Від п’яти точок — договірна ціна.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 07 ЗАПЕРЕЧЕННЯ ===================== -->
+  <section class="band">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">07</p>
+        <div><h2 class="hdg">Те, про що питають до підписання</h2></div>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>У мене генератор. Ваші датчики це взагалі побачать?</summary>
+          <div class="ans">
+            <p>Побачать і розділять. Датчик міряє струм на лінії, а не «електроенергію з мережі», тому
+              генераторні години видно окремо — вони просто проходять через інший ввід. <b>Це корисніше,
+              ніж здається:</b> ви отримуєте вартість генераторної кіловат-години у своїх цифрах —
+              з літрами пального, моторесурсом і заміною масла, — і далі видно, що дешевше запускати
+              на генераторі, а що краще взагалі не вмикати.</p>
+            <p>Якщо стоїть ДБЖ з батареями, ми окремо показуємо, скільки енергії йде на заряд і коли
+              він відбувається. Заряд у піковій зоні — одна з найчастіших знахідок.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Чи потрібно переробляти електрику?</summary>
+          <div class="ans">
+            <p><b>Ні.</b> Нічого не демонтується й не переноситься. Струмові кліщі розмикаються й
+              застібаються на вже наявний провід, шлюз стає на вільне місце DIN-рейки й займає два модулі.
+              Живлення щитка вимикати не потрібно, заклад працює під час монтажу.</p>
+            <p>Якщо у щитку фізично немає двох вільних модулів або ввід зроблений так, що підлізти
+              неможливо, — ми скажемо це на аудиті до будь-яких зобов’язань. Жодних «а тепер треба
+              поміняти щит за власний кошт» на другому етапі не буде.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Кому належать дані й що буде, якщо я піду?</summary>
+          <div class="ans">
+            <p><b>Дані ваші.</b> Вивантаження всього архіву в CSV доступне з першого дня й без запиту до
+              підтримки. На розірванні договору ви забираєте повний архів, ми забираємо обладнання.</p>
+            <p>Ми не передаємо показники постачальнику електроенергії, орендодавцю, банку чи будь-кому
+              ще — ні в сирому вигляді, ні в агрегованому. Знеособлені профілі використовуємо лише для
+              порівняння з середнім по типу закладу, і від цього можна відмовитися одним перемикачем
+              у налаштуваннях — на точність ваших розрахунків це не впливає.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 08 ФОРМА ===================== -->
+  <section class="band" id="audit">
+    <div class="inner">
+      <div class="shead">
+        <p class="mark">08</p>
+        <div>
+          <h2 class="hdg">Аудит однієї точки — безкоштовно</h2>
+          <p class="lede">Ставимо датчик на тиждень, забираємо і приносимо розбір рахунку.
+            Якщо не знайдемо, де у вас втрати, — ви нічого не платите й нічого не підписуєте.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <form id="auditForm" novalidate>
+          <div class="field">
+            <label for="f-biz">Назва закладу</label>
+            <input type="text" id="f-biz" name="biz" required autocomplete="organization" placeholder="Кав’ярня на Січових">
+          </div>
+          <div class="field">
+            <label for="f-city">Місто</label>
+            <input type="text" id="f-city" name="city" required autocomplete="address-level2" placeholder="Львів">
+          </div>
+          <div class="field">
+            <label for="f-phone">Телефон</label>
+            <input type="tel" id="f-phone" name="phone" required autocomplete="tel"
+                   inputmode="tel" placeholder="+380 __ ___ __ __" aria-describedby="f-phone-n">
+            <p class="note" id="f-phone-n">Один дзвінок, щоб узгодити час монтажу. Без розсилок.</p>
+          </div>
+          <div class="field">
+            <label for="f-points">Кількість точок</label>
+            <select id="f-points" name="points" required>
+              <option value="1">1 точка</option>
+              <option value="2-4" selected>2–4 точки</option>
+              <option value="5-9">5–9 точок</option>
+              <option value="10+">10 і більше</option>
+            </select>
+          </div>
+          <div class="form-foot">
+            <button class="btn" type="submit">Надіслати заявку</button>
+            <span class="mark">демонстраційний режим</span>
+          </div>
+          <p class="status" id="formStatus" hidden role="status"></p>
+        </form>
+
+        <aside>
+          <p class="mark" style="margin-bottom:var(--s4)">Що входить в аудит</p>
+          <ul class="aside-list">
+            <li><b>Сім діб вимірювань</b> погодинний профіль по вводу й трьох лініях на вибір</li>
+            <li><b>Розбір рахунку</b> скільки припадає на кожну групу обладнання в гривнях</li>
+            <li><b>Графік перенесення</b> що і на яку годину зсувати, з розрахунком економії</li>
+            <li><b>Список обладнання</b> що міняти в першу чергу й за скільки воно окупиться</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="inner">
+      <div class="fgrid">
+        <div>
+          <a class="brand" href="#top">Vatt <span>облік · 2026</span></a>
+          <p><b>Це концепт-проєкт, зроблений як демонстрація інтерфейсу.</b>
+            Компанія «Vatt» не існує. Кейс пекарні «Хлібна №3», відгук, ціни, тарифні ставки
+            та всі показники в дашборді — вигадані й підібрані лише для правдоподібності.
+            Форма заявки нічого не надсилає і нікуди не зберігає введене.
+            Не використовуйте ці цифри для розрахунків на реальному об’єкті.</p>
+        </div>
+        <div>
+          <p class="mark" style="color:#8d959c;margin-bottom:var(--s3)">Технічна довідка</p>
+          <p>Графіки намальовані вручну на SVG, без графічних бібліотек.
+            Усі показники виводяться з одного об’єкта синтетичних даних.
+            Під кожним графіком — таблиця значень для скрінридерів.
+            Анімація спрацьовує тільки у відповідь на дію й вимикається
+            через <b>prefers-reduced-motion</b>.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   Єдине джерело цифр. Нічого не хардкодимо по місцях.
+   ============================================================ */
+const DATA = {
+  tariff: { dayRate: 5.60, nightRate: 2.80, nightFrom: 23, nightTo: 7, unit: "грн/кВт·год" },
+
+  venues: [
+    {
+      id: "coffee", label: "Кав’ярня", points: 3,
+      profile: [3.2,3.0,2.9,2.9,3.0,3.4,4.6,6.2,7.8,9.1,9.6,9.2,8.1,7.2,6.4,6.0,6.8,8.4,8.8,7.6,5.8,4.4,3.7,3.3],
+      hint: "Переносяться передохолодження вітрин і посудомийка. Кавомашину зсунути не можна — вона потрібна тоді, коли є люди.",
+      equipment: [
+        { label: "Холодильні вітрини й камери", share: 0.31, shiftable: 0.35 },
+        { label: "Кавомашина й кавомолка",      share: 0.22, shiftable: 0.00 },
+        { label: "Вентиляція й кондиціювання",  share: 0.18, shiftable: 0.05 },
+        { label: "Освітлення",                  share: 0.14, shiftable: 0.00 },
+        { label: "Посудомийка й дрібна техніка",share: 0.15, shiftable: 0.85 }
+      ]
+    },
+    {
+      id: "bakery", label: "Пекарня", points: 2,
+      profile: [6.1,6.0,8.4,14.2,19.6,22.4,21.8,18.6,15.2,12.8,11.4,10.6,10.1,9.8,9.4,9.0,9.6,10.8,10.2,8.6,7.4,6.8,6.4,6.2],
+      hint: "Головний резерв — вивід печей на температуру й замісочний цикл. Їх можна зрушити на годину-дві раніше.",
+      equipment: [
+        { label: "Печі",                      share: 0.38, shiftable: 0.55 },
+        { label: "Холодильні камери й шокер",  share: 0.18, shiftable: 0.30 },
+        { label: "Вентиляція й витяжки",       share: 0.14, shiftable: 0.05 },
+        { label: "Тістомісильне обладнання",   share: 0.12, shiftable: 0.40 },
+        { label: "Пакування й конвеєр",        share: 0.10, shiftable: 0.50 },
+        { label: "Освітлення",                 share: 0.08, shiftable: 0.00 }
+      ]
+    },
+    {
+      id: "workshop", label: "Майстерня", points: 2,
+      profile: [4.2,4.0,3.9,3.9,4.0,4.2,5.4,8.8,13.6,16.2,17.4,16.8,14.2,15.6,16.4,15.8,13.2,10.4,7.2,5.6,4.8,4.4,4.3,4.2],
+      hint: "Компресор і сушильна камера працюють автономно — їх можна запускати вночі без присутності людей.",
+      equipment: [
+        { label: "Станки й ЧПУ",             share: 0.28, shiftable: 0.20 },
+        { label: "Компресор",                share: 0.24, shiftable: 0.50 },
+        { label: "Фарбувальна й сушка",      share: 0.14, shiftable: 0.60 },
+        { label: "Вентиляція",               share: 0.12, shiftable: 0.10 },
+        { label: "Освітлення",               share: 0.11, shiftable: 0.00 },
+        { label: "Зарядні станції й інше",   share: 0.11, shiftable: 0.30 }
+      ]
+    }
+  ],
+
+  /* 03 — типові втрати */
+  leaks: [
+    { n: "01", title: "Холодильник, якому дванадцять років",
+      detail: "Зношений компресор тримає температуру не тим, що працює ефективніше, а тим, що працює довше. На однаковій вітрині різниця між новим і спрацьованим агрегатом — вісімнадцять кіловат-годин щодня, і вона не видно ніде, крім загальної суми в рахунку.",
+      kwhPerDay: 18, zone: "day",
+      rows: [["Понад норму", "18 кВт·год/добу"], ["Окупність заміни", "14 місяців"]] },
+    { n: "02", title: "Піч виходить на температуру в пікову зону",
+      detail: "Вивід на робочий режим — найважча частина циклу, і вона майже завжди припадає на ранок, коли кіловат-година коштує вдвічі більше. Сам графік випікання при цьому зсувати не потрібно: достатньо почати прогрів до сьомої.",
+      kwhPerMonth: 1100, zone: "shift",
+      rows: [["Можна перенести", "1 100 кВт·год/міс"], ["Різниця між зонами", "2,80 грн/кВт·год"]] },
+    { n: "03", title: "Вентиляція працює після закриття",
+      detail: "Найчастіша знахідка першої ж доби вимірювань. Витяжка лишається в роботі до ранку, бо її ніхто не вимикає — вимикач у підсобці, а зміна зачиняє заклад поспіхом. Таймер за чотириста гривень закриває питання повністю.",
+      kwPerHour: 1.6, hours: 8, zone: "night",
+      rows: [["Марна робота", "1,6 кВт × 8 год"], ["Ціна рішення", "таймер, 400 грн"]] }
+  ],
+
+  /* 05 — кейс */
+  caseStudy: {
+    venue: "Пекарня «Хлібна №3»", points: 2,
+    baseline: 73600,
+    months: [
+      { m: "Міс. 1", bill: 73600, note: "вимірювання без змін" },
+      { m: "Міс. 2", bill: 69200, note: "таймери на вентиляцію" },
+      { m: "Міс. 3", bill: 62800, note: "прогрів печей зсунуто на 04:40" },
+      { m: "Міс. 4", bill: 58400, note: "заміна холодильної камери" },
+      { m: "Міс. 5", bill: 55600, note: "заміс перенесено в ніч" },
+      { m: "Міс. 6", bill: 54900, note: "графік вийшов на плато" }
+    ],
+    changes: [
+      ["Прогрів печей", "06:10", "04:40"],
+      ["Частка нічної зони", "38 %", "57 %"],
+      ["Вентиляція після закриття", "6,5 год", "0 год"],
+      ["Холодильна камера", "2012 р.", "інверторна"],
+      ["Рахунок за місяць", "73 600 грн", "54 900 грн"]
+    ]
+  }
+};
+
+/* ============================================================
+   Форматування й похідні величини
+   ============================================================ */
+const nf0  = new Intl.NumberFormat("uk-UA", { maximumFractionDigits: 0 });
+const nf1  = new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const nf2  = new Intl.NumberFormat("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const T    = DATA.tariff;
+const isNight = h => h >= T.nightFrom || h < T.nightTo;
+const rateAt  = h => isNight(h) ? T.nightRate : T.dayRate;
+const DELTA   = T.dayRate - T.nightRate;
+const pad2    = h => String(h).padStart(2, "0") + ":00";
+const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function derive(v) {
+  let dayKwh = 0, nightKwh = 0;
+  v.profile.forEach((kw, h) => { isNight(h) ? (nightKwh += kw) : (dayKwh += kw); });
+  const totalKwh    = dayKwh + nightKwh;
+  const dayPerPoint = dayKwh * T.dayRate + nightKwh * T.nightRate;
+  const monthPoint  = dayPerPoint * 30;
+  const shiftFactor = v.equipment.reduce((s, e) => s + e.share * e.shiftable, 0);
+  return { dayKwh, nightKwh, totalKwh, monthPoint, monthTotal: monthPoint * v.points,
+           nightShare: nightKwh / totalKwh, shiftFactor };
+}
+DATA.venues.forEach(v => { v.d = derive(v); });
+
+/* профіль після перенесення pct% доступного навантаження */
+function shiftedProfile(v, pct) {
+  const k = v.d.shiftFactor * (pct / 100);
+  const moved = v.d.dayKwh * k;
+  const nightHours = v.profile.filter((_, h) => isNight(h)).length;
+  return v.profile.map((kw, h) => isNight(h) ? kw + moved / nightHours : kw * (1 - k));
+}
+function savings(v, pct) {
+  const movedKwh = v.d.dayKwh * v.d.shiftFactor * (pct / 100);
+  const perDay   = movedKwh * DELTA;
+  const month    = perDay * 30 * v.points;
+  return { movedKwh, month, year: month * 12 };
+}
+
+/* ============================================================
+   Стан
+   ============================================================ */
+const state = { venue: DATA.venues[0], pct: 30, hour: null };
+const $ = sel => document.querySelector(sel);
+
+/* ============================================================
+   Графік 01 — доба
+   ============================================================ */
+/* графік малюється в реальних пікселях контейнера: підписи завжди 11px,
+   а вужче 640px контейнер гортається по горизонталі */
+const CH = 270, M = { t: 24, r: 22, b: 30, l: 40 };
+let CW = 720;
+const slotW = () => (CW - M.l - M.r) / 24;
+const box = { day: 640, case: 320 };
+function measure() {
+  box.day  = Math.max(640, Math.floor($("#chartScroll").clientWidth));
+  box.case = Math.max(320, Math.floor($("#caseChart").parentElement.clientWidth));
+}
+
+function drawDay() {
+  CW = box.day;
+  const v = state.venue, pct = state.pct;
+  const now = v.profile, next = shiftedProfile(v, pct);
+  const peak = Math.max(...now, ...next);
+  const step = peak <= 12 ? 2 : 4;                       // круглі поділки: 0·2·4… або 0·4·8…
+  const ticks = Math.ceil((peak * 1.1) / step), yMax = ticks * step;
+  const PH = CH - M.t - M.b, S = slotW();
+
+  /* кожна година — слот: точка в центрі, межі слотів — для зон і поділок */
+  const X  = h => M.l + (h + 0.5) * S;
+  const XE = h => M.l + h * S;
+  const Y  = kw => M.t + PH - (kw / yMax) * PH;
+  const pts = arr => arr.map((kw, h) => X(h).toFixed(1) + "," + Y(kw).toFixed(1)).join(" ");
+
+  const grid = [], yLab = [];
+  for (let i = 0; i <= ticks; i++) {
+    const kw = step * i, y = Y(kw).toFixed(1);
+    grid.push(`<line x1="${M.l}" y1="${y}" x2="${CW - M.r}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`);
+    yLab.push(`<text x="${M.l - 8}" y="${y}" text-anchor="end" dominant-baseline="middle"
+      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${nf0.format(kw)}</text>`);
+  }
+
+  let xLab = "", xTick = "";
+  for (let h = 0; h <= 24; h += 3) {
+    xLab += `<text x="${XE(h).toFixed(1)}" y="${M.t + PH + 19}" text-anchor="middle"
+      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${pad2(h)}</text>`;
+    xTick += `<line x1="${XE(h).toFixed(1)}" y1="${M.t + PH}" x2="${XE(h).toFixed(1)}" y2="${M.t + PH + 5}"
+      stroke="var(--ink)" stroke-width="1"/>`;
+  }
+
+  /* нічні зони: 00:00–07:00 та 23:00–24:00 */
+  const band = (a, b) => `<rect x="${XE(a).toFixed(1)}" y="${M.t}" width="${(XE(b) - XE(a)).toFixed(1)}"
+    height="${PH}" fill="url(#hatch)"/>`;
+  const bands = band(0, T.nightTo) + band(T.nightFrom, 24);
+
+  const cur = state.hour;
+  const cursor = cur === null ? "" :
+    `<line x1="${X(cur).toFixed(1)}" y1="${M.t}" x2="${X(cur).toFixed(1)}" y2="${M.t + PH}"
+       stroke="var(--ink)" stroke-width="1"/>
+     <rect x="${(X(cur) - 3.5).toFixed(1)}" y="${(Y(now[cur]) - 3.5).toFixed(1)}" width="7" height="7"
+       fill="var(--signal)"/>` +
+    (pct > 0 ? `<rect x="${(X(cur) - 3).toFixed(1)}" y="${(Y(next[cur]) - 3).toFixed(1)}" width="6" height="6"
+       fill="var(--paper)" stroke="var(--ink)" stroke-width="1"/>` : "");
+
+  const svgD = $("#dayChart");
+  svgD.setAttribute("viewBox", `0 0 ${CW} ${CH}`);
+  svgD.setAttribute("width", CW); svgD.setAttribute("height", CH);
+  svgD.innerHTML = `
+    <defs>
+      <pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+        <rect width="6" height="6" fill="var(--paper)"/>
+        <line x1="0" y1="0" x2="0" y2="6" stroke="var(--line)" stroke-width="1"/>
+      </pattern>
+    </defs>
+    ${bands}${grid.join("")}
+    <line x1="${M.l}" y1="${M.t + PH}" x2="${CW - M.r}" y2="${M.t + PH}" stroke="var(--ink)" stroke-width="1"/>
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t + PH}" stroke="var(--ink)" stroke-width="1"/>
+    ${xTick}${yLab.join("")}${xLab}
+    <text x="${M.l - 8}" y="${M.t - 12}" text-anchor="end" font-family="IBM Plex Mono"
+      font-size="11" fill="var(--ink)">кВт</text>
+    ${pct > 0 ? `<polyline points="${pts(next)}" fill="none" stroke="var(--ink)" stroke-width="1.25"
+      stroke-dasharray="5 3" stroke-linejoin="round"/>` : ""}
+    <polyline points="${pts(now)}" fill="none" stroke="var(--signal)" stroke-width="2" stroke-linejoin="round"/>
+    ${cursor}`;
+
+  /* таблиця значень */
+  let rows = "";
+  for (let h = 0; h < 24; h++) {
+    rows += `<tr><th scope="row">${pad2(h)}</th><td>${nf1.format(now[h])}</td>
+      <td>${nf1.format(next[h])}</td><td>${isNight(h) ? "нічна" : "денна"}</td>
+      <td>${nf2.format(now[h] * rateAt(h))}</td></tr>`;
+  }
+  $("#dayTable").innerHTML = `<table>
+    <caption>Розхід за добу на одну точку, ${v.label.toLowerCase()}, перенесено ${state.pct} % доступного навантаження.</caption>
+    <thead><tr><th scope="col">Година</th><th scope="col">Зараз, кВт</th>
+    <th scope="col">Після, кВт</th><th scope="col">Зона</th><th scope="col">Вартість, грн</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+
+function setReadout() {
+  const v = state.venue, h = state.hour;
+  if (h === null) {
+    $("#readout").innerHTML = `<span class="dim">Наведіть курсор на графік або натисніть стрілки —
+      покажемо значення по годині.</span>`;
+    return;
+  }
+  const now = v.profile[h], next = shiftedProfile(v, state.pct)[h];
+  $("#readout").innerHTML =
+    `<span>${pad2(h)}</span>
+     <span class="dim">зараз</span> <span>${nf1.format(now)} кВт,</span>
+     ${state.pct > 0 ? `<span class="dim">після</span> <span>${nf1.format(next)} кВт,</span>` : ""}
+     <span class="dim">${isNight(h) ? "нічна зона" : "денна зона"}, ${nf2.format(rateAt(h))} грн,</span>
+     <span class="dim">вартість години</span> <span>${nf2.format(now * rateAt(h))} грн</span>`;
+}
+
+/* ============================================================
+   Графік 02 — кейс
+   ============================================================ */
+function drawCase() {
+  const svg = $("#caseChart");
+  const c = DATA.caseStudy, H = 240, m = { t: 26, r: 16, b: 30, l: 48 };
+  const W = box.case;
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const yMax = Math.ceil(c.baseline / 10000) * 10000;
+  const Y = val => m.t + ph - (val / yMax) * ph;
+  const bw = pw / c.months.length;
+
+  let grid = "", yLab = "";
+  for (let i = 0; i <= 4; i++) {
+    const val = (yMax / 4) * i, y = Y(val).toFixed(1);
+    grid += `<line x1="${m.l}" y1="${y}" x2="${W - m.r}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
+    yLab += `<text x="${m.l - 8}" y="${y}" text-anchor="end" dominant-baseline="middle"
+      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${nf0.format(val / 1000)}</text>`;
+  }
+
+  let bars = "", xLab = "", vals = "";
+  c.months.forEach((mo, i) => {
+    const r = bw < 60 ? 0.78 : 0.56, x = m.l + i * bw + bw * (1 - r) / 2, w = bw * r, y = Y(mo.bill);
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}"
+      height="${(m.t + ph - y).toFixed(1)}" fill="var(--signal)"/>`;
+    xLab += `<text x="${(x + w / 2).toFixed(1)}" y="${m.t + ph + 18}" text-anchor="middle"
+      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${mo.m.replace("Міс. ", "М")}</text>`;
+    vals += `<text x="${(x + w / 2).toFixed(1)}" y="${(y + 17).toFixed(1)}" text-anchor="middle"
+      font-family="IBM Plex Mono" font-size="${w < 40 ? 10 : 11}" font-weight="500" fill="var(--white)">${nf1.format(mo.bill / 1000)}</text>`;
+  });
+
+  const by = Y(c.baseline).toFixed(1);
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W); svg.setAttribute("height", H);
+  svg.innerHTML = `${grid}
+    ${bars}
+    <line x1="${m.l}" y1="${by}" x2="${W - m.r}" y2="${by}" stroke="var(--ink)" stroke-width="1.25" stroke-dasharray="5 3"/>
+    <text x="${W - m.r}" y="${(+by - 7)}" text-anchor="end" font-family="IBM Plex Mono"
+      font-size="11" fill="var(--ink)">базова лінія ${nf0.format(c.baseline)} грн</text>
+    <line x1="${m.l}" y1="${m.t + ph}" x2="${W - m.r}" y2="${m.t + ph}" stroke="var(--ink)" stroke-width="1"/>
+    <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${m.t + ph}" stroke="var(--ink)" stroke-width="1"/>
+    ${vals}${yLab}${xLab}
+    <text x="0" y="${m.t - 14}" text-anchor="start" font-family="IBM Plex Mono"
+      font-size="11" fill="var(--ink)">тис. грн</text>`;
+
+  const saved = c.months.reduce((s, mo) => s + (c.baseline - mo.bill), 0);
+  $("#caseTotal").textContent = nf0.format(saved);
+  $("#caseLede").textContent =
+    `Дві точки, той самий двозонний тариф. Нічого не закривали й не скорочували випікання — ` +
+    `змінили графік і одну холодильну камеру. За шість місяців рахунок опустився ` +
+    `з ${nf0.format(c.baseline)} до ${nf0.format(c.months[c.months.length - 1].bill)} грн на місяць.`;
+
+  $("#caseRows").innerHTML = c.changes.map(([l, a, b]) =>
+    `<div class="ba-row"><span class="lbl">${l}</span><span class="was">${a}</span><span class="now">${b}</span></div>`
+  ).join("");
+
+  $("#caseTable").innerHTML = `<table>
+    <caption>Рахунок за місяць, дві точки. Базова лінія до змін — ${nf0.format(c.baseline)} грн.</caption>
+    <thead><tr><th scope="col">Місяць</th><th scope="col">Рахунок, грн</th>
+    <th scope="col">Економія, грн</th><th scope="col">Що зробили</th></tr></thead>
+    <tbody>${c.months.map(mo => `<tr><th scope="row">${mo.m}</th><td>${nf0.format(mo.bill)}</td>
+      <td>${nf0.format(c.baseline - mo.bill)}</td><td style="text-align:left;white-space:normal">${mo.note}</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
+/* ============================================================
+   Показники, обладнання, плавний перерахунок
+   ============================================================ */
+function countTo(el, target, decimals) {
+  const from = parseFloat((el.dataset.raw || "0")) || 0;
+  el.dataset.raw = String(target);
+  const fmt = n => decimals ? nf1.format(n) : nf0.format(Math.round(n));
+  if (reduced() || from === target) { el.textContent = fmt(target); return; }
+  const t0 = performance.now(), dur = 420;
+  (function step(t) {
+    const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = fmt(from + (target - from) * e);
+    if (k < 1) requestAnimationFrame(step);
+  })(t0);
+}
+
+function renderKpis() {
+  const v = state.venue, s = savings(v, state.pct);
+  countTo($("#kpiBill"),  v.d.monthTotal, false);
+  countTo($("#kpiNight"), v.d.nightShare * 100, true);
+  countTo($("#kpiMonth"), s.month, false);
+  countTo($("#kpiYear"),  s.year, false);
+}
+
+function renderEquipment() {
+  const v = state.venue, pct = state.pct;
+  const maxShare = Math.max(...v.equipment.map(e => e.share));
+  $("#eqList").innerHTML = v.equipment.map((e, i) => {
+    const kwh   = v.d.totalKwh * e.share;
+    const uah   = v.d.monthPoint * e.share;
+    const moved = e.share * e.shiftable * (pct / 100);
+    const alpha = (0.88 - i * 0.12).toFixed(2);
+    return `<div class="eq-row" data-shiftable="${e.shiftable > 0 ? 1 : 0}">
+      <span class="eq-name">${e.label}
+        ${e.shiftable > 0 ? `<span class="eq-tag">· переносно до ${Math.round(e.shiftable * 100)} %</span>` : ""}</span>
+      <span class="eq-val">${nf0.format(e.share * 100)} %<span class="sep">|</span>${nf0.format(kwh)} кВт·год<span class="sep">|</span><span class="mo">${nf0.format(uah)} грн/міс</span></span>
+      <span class="eq-bar">
+        <span class="eq-fill" style="width:${(e.share / maxShare * 100).toFixed(1)}%;opacity:${alpha}"></span>
+        <span class="eq-shift" style="width:${(moved / maxShare * 100).toFixed(1)}%"></span>
+      </span>
+    </div>`;
+  }).join("");
+
+  $("#eqTable").innerHTML = `<table>
+    <caption>Частка груп обладнання в рахунку однієї точки, ${v.label.toLowerCase()}.</caption>
+    <thead><tr><th scope="col">Група</th><th scope="col">Частка, %</th><th scope="col">кВт·год/добу</th>
+    <th scope="col">грн/міс</th><th scope="col">Можна перенести, %</th></tr></thead>
+    <tbody>${v.equipment.map(e => `<tr><th scope="row" style="text-align:left;white-space:normal">${e.label}</th>
+      <td>${nf0.format(e.share * 100)}</td><td>${nf0.format(v.d.totalKwh * e.share)}</td>
+      <td>${nf0.format(v.d.monthPoint * e.share)}</td><td>${Math.round(e.shiftable * 100)}</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
+function renderAll() {
+  $("#shiftOut").textContent = state.pct + " %";
+  $("#shiftHint").textContent = state.venue.hint;
+  renderKpis(); renderEquipment(); drawDay(); setReadout();
+}
+
+/* ============================================================
+   03 — втрати
+   ============================================================ */
+function renderLeaks() {
+  $("#leaks").innerHTML = DATA.leaks.map(l => {
+    let perMonth;
+    if (l.kwhPerDay)        perMonth = l.kwhPerDay * 30 * T.dayRate;
+    else if (l.kwhPerMonth) perMonth = l.kwhPerMonth * DELTA;
+    else                    perMonth = l.kwPerHour * l.hours * 30 * T.nightRate;
+    return `<div class="leak">
+      <span class="mark">${l.n}</span>
+      <h3 class="hdg">${l.title}</h3>
+      <p class="leak-sum">${nf0.format(perMonth)} грн</p>
+      <p class="leak-sub">втрат на місяць, одна точка</p>
+      <p>${l.detail}</p>
+      <dl>${l.rows.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("")}</dl>
+    </div>`;
+  }).join("");
+}
+
+/* ============================================================
+   Керування
+   ============================================================ */
+$("#venueSeg").innerHTML = DATA.venues.map((v, i) =>
+  `<label><input type="radio" name="venue" value="${v.id}" ${i === 0 ? "checked" : ""}>
+   <span>${v.label} · ${v.points} точки</span></label>`).join("");
+
+$("#venueSeg").addEventListener("change", e => {
+  const v = DATA.venues.find(x => x.id === e.target.value);
+  if (v) { state.venue = v; state.hour = null; renderAll(); }
+});
+
+const slider = $("#shift");
+slider.value = state.pct;
+slider.addEventListener("input", () => { state.pct = +slider.value; renderAll(); });
+
+/* курсор по графіку */
+const scroll = $("#chartScroll"), svgEl = $("#dayChart");
+function hourFromClientX(clientX) {
+  const r = svgEl.getBoundingClientRect();
+  const vx = ((clientX - r.left) / r.width) * CW;
+  const h = Math.floor((vx - M.l) / slotW());
+  return Math.max(0, Math.min(23, h));
+}
+svgEl.addEventListener("pointermove", e => {
+  const h = hourFromClientX(e.clientX);
+  if (h !== state.hour) { state.hour = h; drawDay(); setReadout(); }
+});
+svgEl.addEventListener("pointerleave", () => { state.hour = null; drawDay(); setReadout(); });
+scroll.addEventListener("keydown", e => {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  e.preventDefault();
+  const step = e.key === "ArrowRight" ? 1 : -1;
+  state.hour = state.hour === null ? (step > 0 ? 0 : 23) : Math.max(0, Math.min(23, state.hour + step));
+  drawDay(); setReadout();
+});
+scroll.addEventListener("blur", () => { state.hour = null; drawDay(); setReadout(); });
+
+/* PDF-приклад — у концепті файлу немає */
+$("#pdfBtn").addEventListener("click", () => {
+  const s = $("#pdfStatus");
+  s.hidden = false;
+  s.textContent = "Демонстраційний режим: у концепт-проєкті файл звіту не додається. " +
+    "У робочій версії тут був би PDF на чотири сторінки — профіль за тиждень, розбивка по лініях і графік перенесення.";
+});
+
+/* форма */
+$("#auditForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target, s = $("#formStatus");
+  const bad = [...f.querySelectorAll("input[required], select[required]")].find(el => !el.value.trim());
+  if (bad) {
+    s.hidden = false;
+    s.textContent = "Заповніть поле «" + f.querySelector(`label[for="${bad.id}"]`).textContent.trim() + "».";
+    bad.focus();
+    return;
+  }
+  s.hidden = false;
+  s.textContent = "Заявку прийнято в демонстраційному режимі. Нічого не надіслано й не збережено — " +
+    "це концепт-проєкт, у реальній версії тут був би дзвінок протягом робочого дня.";
+});
+
+/* статичні підписи з тарифу */
+$("#tariffLine").textContent =
+  `тариф: день ${nf2.format(T.dayRate)} · ніч ${nf2.format(T.nightRate)} ${T.unit}`;
+$("#nightWindow").textContent = `${pad2(T.nightFrom)}–${pad2(T.nightTo)}`;
+$("#heroSum").textContent = nf0.format(DATA.venues[0].d.monthTotal);
+
+/* дашборд — на другому екрані, тож малюємо його після першої відмальовки героя */
+function init() { measure(); renderLeaks(); drawCase(); renderAll(); }
+requestAnimationFrame(() => setTimeout(init, 0));
+
+let lastW = window.innerWidth;
+window.addEventListener("resize", () => {
+  if (window.innerWidth === lastW) return;   // мобільний рядок адреси міняє лише висоту
+  lastW = window.innerWidth;
+  measure(); drawDay(); drawCase();
+}, { passive: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# локальні інструменти агента — не частина сайту
+.agents/
+.claude/
+.codex/
+.impeccable/
+skills-lock.json
