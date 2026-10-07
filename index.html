@@ -209,6 +209,29 @@ h3.hdg{font-size:clamp(18px,2.4vw,22px);margin-bottom:var(--s3)}
 }
 .spec b{display:block;font:600 15px var(--mono);color:var(--ink)}
 
+/* розбивка рахунку поруч із заголовком — від 1280px, коли праворуч з’являється місце */
+.hero-bill{display:none}
+@media (min-width:1280px){
+  .hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--s8);align-items:end}
+  .hero h1{font-size:clamp(48px,4vw,76px)}
+  .hero-bill{display:block;background:var(--white);border:1px solid var(--line)}
+}
+.bill-hd{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--s3);
+  padding:var(--s3) var(--s4);border-bottom:1px solid var(--line)}
+.bill-hd .mark:first-child{color:var(--ink)}
+.bill-rows li{display:grid;grid-template-columns:minmax(0,1fr) auto 4ch;gap:var(--s2) var(--s4);
+  align-items:baseline;padding:var(--s3) var(--s4) var(--s3);border-bottom:1px solid var(--line)}
+.bill-rows .nm{font-size:14px;line-height:1.3}
+.bill-rows .uah{font:500 14px var(--mono);text-align:right;white-space:nowrap}
+.bill-rows .pc{font:400 13px var(--mono);color:var(--muted);text-align:right}
+.bill-rows .bar{grid-column:1/-1;height:4px;background:var(--paper)}
+.bill-rows .bar i{display:block;height:100%;background:var(--ink)}
+.bill-total{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s4);
+  padding:var(--s4);border-bottom:1px solid var(--line);font-weight:600}
+.bill-total .num{font:600 24px var(--mono);letter-spacing:-.02em}
+.bill-note{padding:var(--s3) var(--s4) var(--s4);font:400 13px/1.5 var(--mono);color:var(--muted)}
+.bill-note b{color:var(--signal);font-weight:600}
+
 /* ---------- 02 демо ---------- */
 .panel{background:var(--white);border:1px solid var(--line)}
 .panel-hd{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s3);
@@ -415,6 +438,34 @@ footer .brand span{color:#8d959c}
 footer p{font:400 13px/1.6 var(--mono);color:#aab1b7;max-width:62ch;margin-top:var(--s3)}
 footer b{color:var(--white);font-weight:600}
 
+/* ---------- широкі екрани (1600+, цільовий 1920×1080) ---------- */
+.step p{max-width:68ch}
+@media (min-width:1600px){
+  :root{--pad:72px}
+  .wrap{max-width:1760px}
+  body{font-size:17px}
+  .mark{font-size:13px}
+  h2.hdg{font-size:46px}
+  .hero .inner{padding-top:var(--s8);padding-bottom:var(--s8)}
+  .hero .lede{font-size:20px}
+  .lede{font-size:17px}
+  .kpi{padding:var(--s5)}
+  .kpi dd{font-size:38px}
+  .leak .leak-sum{font-size:40px}
+  .plan-price{font-size:48px}
+  .case-total dd{font-size:44px}
+  /* дашборд: графік і розбивка поруч, щоб графік не ставав плоскою смугою */
+  .viz{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
+  .viz .chart-wrap{padding:var(--s5)}
+  .viz .eq{border-top:0;border-left:1px solid var(--line);padding:var(--s5)}
+  .viz .eq-row{grid-template-columns:minmax(0,1fr)}
+  .viz .eq-val{white-space:normal}
+  .form-grid{grid-template-columns:minmax(0,760px) minmax(0,440px);column-gap:120px}
+  .faq{max-width:1200px}
+}
+/* між 1600 і 1760 каркас займає весь екран — бічні лінії зайві */
+@media (min-width:1600px) and (max-width:1760px){.wrap{border-left:0;border-right:0}}
+
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
 @media (prefers-reduced-motion:reduce){
@@ -449,13 +500,27 @@ footer b{color:var(--white);font-weight:600}
   <!-- ===================== 01 ГЕРОЙ ===================== -->
   <section class="band hero" id="top">
     <div class="inner">
-      <p class="mark">01</p>
-      <h1>За світло у трьох точках&nbsp;— <span class="amount" id="heroSum">64 638</span> грн на місяць. Покажемо, з чого саме.</h1>
-      <p class="lede">Vatt ставить датчики на ввідні лінії й розкладає рахунок по обладнанню — година за годиною.
-        Видно, що працює вночі даремно, який апарат з’їдає найбільше в пікову зону і скільки реально дає
-        перенесення частини навантаження на дешевий нічний тариф.</p>
-      <div class="hero-cta">
-        <a class="btn" href="#audit">Безкоштовний аудит однієї точки</a>
+      <div class="hero-grid">
+        <div>
+          <p class="mark">01</p>
+          <h1>За світло у трьох точках&nbsp;— <span class="amount" id="heroSum">64 638</span> грн на місяць. Покажемо, з&nbsp;чого саме.</h1>
+          <p class="lede">Vatt ставить датчики на ввідні лінії й розкладає рахунок по обладнанню — година за годиною.
+            Видно, що працює вночі даремно, який апарат з’їдає найбільше в пікову зону і скільки реально дає
+            перенесення частини навантаження на дешевий нічний тариф.</p>
+          <div class="hero-cta">
+            <a class="btn" href="#audit">Безкоштовний аудит однієї точки</a>
+          </div>
+        </div>
+        <!-- лише на широких екранах: на вузьких ту саму розбивку показує дашборд нижче -->
+        <aside class="hero-bill" aria-labelledby="billTitle">
+          <div class="bill-hd">
+            <p class="mark" id="billTitle">Звідки ця сума</p>
+            <p class="mark">кав’ярня · 3 точки · за місяць</p>
+          </div>
+          <ol class="bill-rows" id="billRows"></ol>
+          <div class="bill-total"><span>Разом</span><span class="num" id="billTotal"></span></div>
+          <p class="bill-note" id="billNote"></p>
+        </aside>
       </div>
       <div class="spec">
         <div><b>20 хвилин</b> монтаж на щиток, без вимкнення живлення</div>
@@ -524,6 +589,7 @@ footer b{color:var(--white);font-weight:600}
           </div>
         </dl>
 
+        <div class="viz">
         <figure class="chart-wrap">
           <figcaption class="mark" style="margin-bottom:var(--s3)">Графік 01 · розхід за добу, кВт по годинах</figcaption>
           <p class="readout" id="readout" aria-live="polite"></p>
@@ -553,6 +619,7 @@ footer b{color:var(--white);font-weight:600}
             <div class="tscroll" id="eqTable"></div>
           </details>
         </div>
+        </div><!-- /.viz -->
       </div>
 
       <div class="hero-cta" style="margin-top:var(--s5)">
@@ -967,17 +1034,21 @@ const $ = sel => document.querySelector(sel);
    ============================================================ */
 /* графік малюється в реальних пікселях контейнера: підписи завжди 11px,
    а вужче 640px контейнер гортається по горизонталі */
-const CH = 270, M = { t: 24, r: 22, b: 30, l: 40 };
+let CH = 270;
+const M = { t: 24, r: 22, b: 30, l: 40 };
 let CW = 720;
 const slotW = () => (CW - M.l - M.r) / 24;
-const box = { day: 640, case: 320 };
+const box = { day: 640, dayH: 270, case: 320, caseH: 240 };
 function measure() {
   box.day  = Math.max(640, Math.floor($("#chartScroll").clientWidth));
   box.case = Math.max(320, Math.floor($("#caseChart").parentElement.clientWidth));
+  const k = window.matchMedia("(min-width:1600px)").matches ? 0.42 : 0.32;
+  box.dayH  = Math.round(Math.min(420, Math.max(270, box.day * k)));
+  box.caseH = Math.round(Math.min(340, Math.max(240, box.case * 0.34)));
 }
 
 function drawDay() {
-  CW = box.day;
+  CW = box.day; CH = box.dayH;
   const v = state.venue, pct = state.pct;
   const now = v.profile, next = shiftedProfile(v, pct);
   const peak = Math.max(...now, ...next);
@@ -1077,7 +1148,7 @@ function setReadout() {
    ============================================================ */
 function drawCase() {
   const svg = $("#caseChart");
-  const c = DATA.caseStudy, H = 240, m = { t: 26, r: 16, b: 30, l: 48 };
+  const c = DATA.caseStudy, H = box.caseH, m = { t: 26, r: 16, b: 30, l: 48 };
   const W = box.case;
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
   const yMax = Math.ceil(c.baseline / 10000) * 10000;
@@ -1283,6 +1354,24 @@ $("#tariffLine").textContent =
   `тариф: день ${nf2.format(T.dayRate)} · ніч ${nf2.format(T.nightRate)} ${T.unit}`;
 $("#nightWindow").textContent = `${pad2(T.nightFrom)}–${pad2(T.nightTo)}`;
 $("#heroSum").textContent = nf0.format(DATA.venues[0].d.monthTotal);
+
+/* «Звідки ця сума» в герої. Округлення найбільшою остачею — рядки в сумі дають рівно підсумок */
+function renderBill() {
+  const v = DATA.venues[0], total = Math.round(v.d.monthTotal);
+  const rows = v.equipment.map(e => ({ e, raw: total * e.share }))
+    .map(r => ({ ...r, val: Math.floor(r.raw), frac: r.raw - Math.floor(r.raw) }));
+  let rest = total - rows.reduce((a, r) => a + r.val, 0);
+  [...rows].sort((a, b) => b.frac - a.frac).slice(0, rest).forEach(r => r.val++);
+  const max = Math.max(...v.equipment.map(e => e.share));
+  $("#billRows").innerHTML = rows.sort((a, b) => b.e.share - a.e.share).map(r =>
+    `<li><span class="nm">${r.e.label}</span><span class="uah">${nf0.format(r.val)} грн</span>
+      <span class="pc">${nf0.format(r.e.share * 100)} %</span>
+      <span class="bar" aria-hidden="true"><i style="width:${(r.e.share / max * 100).toFixed(1)}%"></i></span></li>`).join("");
+  $("#billTotal").textContent = nf0.format(total) + " грн";
+  $("#billNote").innerHTML = `Перенесення доступного навантаження в нічну зону —
+    до <b>${nf0.format(savings(v, 100).month)} грн</b> на місяць. Синтетичні дані.`;
+}
+renderBill();
 
 /* дашборд — на другому екрані, тож малюємо його після першої відмальовки героя */
 function init() { measure(); renderLeaks(); drawCase(); renderAll(); }
