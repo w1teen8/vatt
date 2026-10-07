@@ -8,7 +8,12 @@
 <meta name="theme-color" content="#f0f1f2">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2314171a'/%3E%3Cpath d='M3 4h2.2L8 10.6 10.8 4H13L9 12.5H7z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/ibm-plex-sans-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Фолбеки з підігнаними метриками: якщо Plex приходить після першої відмальовки,
+   підміна не переносить рядки (CLS 0). Коефіцієнти виміряно в Chrome на тексті сторінки. */
+@font-face{font-family:"Plex Sans FB";src:local("Arial"),local("ArialMT");font-weight:400;size-adjust:101.3%}
+@font-face{font-family:"Plex Sans FB";src:local("Arial Bold"),local("Arial-BoldMT");font-weight:600 700;size-adjust:97.5%}
 /* IBM Plex Sans / Mono — локальні копії, SIL OFL 1.1 (fonts/OFL-*.txt); лише cyrillic + latin */
 /* cyrillic */
 @font-face {
@@ -117,8 +122,8 @@
   --line:#cdd1d5;
   --signal:#0a2fd4;
 
-  --sans:"IBM Plex Sans",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --sans:"IBM Plex Sans","Plex Sans FB",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","Courier New","Droid Sans Mono",monospace;
 
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
   --s6:32px; --s7:48px; --s8:64px; --s9:96px;
@@ -1067,13 +1072,13 @@ function drawDay() {
     const kw = step * i, y = Y(kw).toFixed(1);
     grid.push(`<line x1="${M.l}" y1="${y}" x2="${CW - M.r}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`);
     yLab.push(`<text x="${M.l - 8}" y="${y}" text-anchor="end" dominant-baseline="middle"
-      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${nf0.format(kw)}</text>`);
+      font-family="IBM Plex Mono, Courier New, monospace" font-size="11" fill="var(--muted)">${nf0.format(kw)}</text>`);
   }
 
   let xLab = "", xTick = "";
   for (let h = 0; h <= 24; h += 3) {
     xLab += `<text x="${XE(h).toFixed(1)}" y="${M.t + PH + 19}" text-anchor="middle"
-      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${pad2(h)}</text>`;
+      font-family="IBM Plex Mono, Courier New, monospace" font-size="11" fill="var(--muted)">${pad2(h)}</text>`;
     xTick += `<line x1="${XE(h).toFixed(1)}" y1="${M.t + PH}" x2="${XE(h).toFixed(1)}" y2="${M.t + PH + 5}"
       stroke="var(--ink)" stroke-width="1"/>`;
   }
@@ -1106,7 +1111,7 @@ function drawDay() {
     <line x1="${M.l}" y1="${M.t + PH}" x2="${CW - M.r}" y2="${M.t + PH}" stroke="var(--ink)" stroke-width="1"/>
     <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t + PH}" stroke="var(--ink)" stroke-width="1"/>
     ${xTick}${yLab.join("")}${xLab}
-    <text x="${M.l - 8}" y="${M.t - 12}" text-anchor="end" font-family="IBM Plex Mono"
+    <text x="${M.l - 8}" y="${M.t - 12}" text-anchor="end" font-family="IBM Plex Mono, Courier New, monospace"
       font-size="11" fill="var(--ink)">кВт</text>
     ${pct > 0 ? `<polyline points="${pts(next)}" fill="none" stroke="var(--ink)" stroke-width="1.25"
       stroke-dasharray="5 3" stroke-linejoin="round"/>` : ""}
@@ -1160,7 +1165,7 @@ function drawCase() {
     const val = (yMax / 4) * i, y = Y(val).toFixed(1);
     grid += `<line x1="${m.l}" y1="${y}" x2="${W - m.r}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
     yLab += `<text x="${m.l - 8}" y="${y}" text-anchor="end" dominant-baseline="middle"
-      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${nf0.format(val / 1000)}</text>`;
+      font-family="IBM Plex Mono, Courier New, monospace" font-size="11" fill="var(--muted)">${nf0.format(val / 1000)}</text>`;
   }
 
   let bars = "", xLab = "", vals = "";
@@ -1169,9 +1174,9 @@ function drawCase() {
     bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}"
       height="${(m.t + ph - y).toFixed(1)}" fill="var(--signal)"/>`;
     xLab += `<text x="${(x + w / 2).toFixed(1)}" y="${m.t + ph + 18}" text-anchor="middle"
-      font-family="IBM Plex Mono" font-size="11" fill="var(--muted)">${mo.m.replace("Міс. ", "М")}</text>`;
+      font-family="IBM Plex Mono, Courier New, monospace" font-size="11" fill="var(--muted)">${mo.m.replace("Міс. ", "М")}</text>`;
     vals += `<text x="${(x + w / 2).toFixed(1)}" y="${(y + 17).toFixed(1)}" text-anchor="middle"
-      font-family="IBM Plex Mono" font-size="${w < 40 ? 10 : 11}" font-weight="500" fill="var(--white)">${nf1.format(mo.bill / 1000)}</text>`;
+      font-family="IBM Plex Mono, Courier New, monospace" font-size="${w < 40 ? 10 : 11}" font-weight="500" fill="var(--white)">${nf1.format(mo.bill / 1000)}</text>`;
   });
 
   const by = Y(c.baseline).toFixed(1);
@@ -1180,12 +1185,12 @@ function drawCase() {
   svg.innerHTML = `${grid}
     ${bars}
     <line x1="${m.l}" y1="${by}" x2="${W - m.r}" y2="${by}" stroke="var(--ink)" stroke-width="1.25" stroke-dasharray="5 3"/>
-    <text x="${W - m.r}" y="${(+by - 7)}" text-anchor="end" font-family="IBM Plex Mono"
+    <text x="${W - m.r}" y="${(+by - 7)}" text-anchor="end" font-family="IBM Plex Mono, Courier New, monospace"
       font-size="11" fill="var(--ink)">базова лінія ${nf0.format(c.baseline)} грн</text>
     <line x1="${m.l}" y1="${m.t + ph}" x2="${W - m.r}" y2="${m.t + ph}" stroke="var(--ink)" stroke-width="1"/>
     <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${m.t + ph}" stroke="var(--ink)" stroke-width="1"/>
     ${vals}${yLab}${xLab}
-    <text x="0" y="${m.t - 14}" text-anchor="start" font-family="IBM Plex Mono"
+    <text x="0" y="${m.t - 14}" text-anchor="start" font-family="IBM Plex Mono, Courier New, monospace"
       font-size="11" fill="var(--ink)">тис. грн</text>`;
 
   const saved = c.months.reduce((s, mo) => s + (c.baseline - mo.bill), 0);
